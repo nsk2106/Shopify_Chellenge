@@ -1,0 +1,56 @@
+---
+title: "Q1"
+author: "Nehaben Kapadiya"
+date: "15/09/2021"
+output:
+  pdf_document: default
+  html_document: default
+---
+Read data from provided csv file anf find first of all summrize order_id,shop_id, user_id, order_amount and  total_items showing the mean, minimum, maximum and interquartile values
+```{r}
+data <-read.csv("/Users/nsk/Documents/DataScience/Shopify/X2019_Winter_Data_Science_Intern_Challenge_Data_Set.csv") #read from CSV file
+summary(data)  #summary of order amount showing min, max value, median, mean for order_id, shop_id, user_id, order_amount, total_items
+```
+
+```{r}
+glimpse(data)
+summary(data$order_amount)
+mean(data$order_amount)
+
+```
+After we get all values, we can see average order value for all 100 sneakers shop is 3145 which is mean for order_amount and to evaluate AOV for for each shop we can get total revenue by each shop
+
+
+```{r}
+data_average <- data_average <- data %>%
+          group_by(shop_id) %>%
+          summarize(aov_per_shop = sum(order_amount)/sum(total_items))
+
+```
+After calculate average across 100 shops over 30 day 78 has highest AOV $25725 which is too high for for relatively affordable item and filter all values for shop_id 78 to analayze AOV better.
+
+
+```{r}
+filter (data, shop_id == 78)
+
+```
+From data_average analysis we can see for shop id 78 AOV is showing 25725 which can be 257.25 hence we need to update AOV for shop 78 diving by its 100
+
+```{r}
+data_average <- data_average %>%
+              mutate(aov_per_shop = case_when(
+                        aov_per_shop == 25725 ~ 257.25,
+                        TRUE ~ aov_per_shop
+                ))
+
+```
+
+Final analysis report for all AOV updated values.
+```{r}
+filter (data_average, shop_id == 78)
+
+```
+
+
+
+
